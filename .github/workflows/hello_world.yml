@@ -1,0 +1,38 @@
+name: Env Setup and Hello World Simulation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-hello-world:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      # Step 2: Install Icarus Verilog
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt update
+          sudo apt install -y iverilog
+
+      # Step 3: Compile Verilog Code
+      - name: Compile Hello World Verilog
+        run: |
+          iverilog -o hello_world_output Testbenches/hello_world.v
+
+      # Step 4: Run Simulation
+      - name: Run Hello World Simulation
+        run: |
+          vvp hello_world_output > results.txt
+
+      # Step 5: Output Simulation Results
+      - name: Display Simulation Results
+        run: cat results.txt
